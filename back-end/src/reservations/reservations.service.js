@@ -28,6 +28,16 @@ function listByPhone(mobile_number) {
     .orderBy("reservation_id");
 }
 
+function create(newReservation) {
+  return knex("reservations")
+    .insert({
+      ...newReservation,
+      status: "booked",
+    })
+    .returning("*")
+    .then((result) => result[0]);
+}
+
 module.exports = {
   list,
   listByDate,
