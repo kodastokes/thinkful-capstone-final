@@ -76,24 +76,25 @@ function hasReservationDate(req, res, next) {
 function hasValidDate(req, res, next) {
   const date = req.body.data.reservation_date;
   const valid = Date.parse(date);
+
   if (valid) {
     return next();
   }
   next({
     status: 400,
     message: "reservation_date must be valid date.",
-  });
+  })
 }
 
 function hasValidStatus(req, res, next) {
   const status = req.body.data.status;
-  if (status !== "seated" && status !== "finished") {
+  if (status !== 'seated' && status !== 'finished') {
     return next();
   }
   next({
     status: 400,
-    message: "status cannot be seated or finished.",
-  });
+    message: "status cannot be seated, finished.",
+  })
 }
 
 function isNotTuesday(req, res, next) {
@@ -105,57 +106,70 @@ function isNotTuesday(req, res, next) {
   next({
     status: 400,
     message: "Restaurant is closed on Tuesdays.",
-  });
+  })
 }
 
 function hasReservationTime(req, res, next) {
   const time = req.body.data.reservation_time;
-  if (time && typeof time === "string") {
+  if (time && typeof time === 'string') {
     return next();
   }
   next({
     status: 400,
     message: "valid reservation_time property required.",
-  });
+  })
 }
 
 function hasValidTime(req, res, next) {
+  const regex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/;
   const time = req.body.data.reservation_time;
-  const first = "10:30";
-  const last = "21:30";
-  if (time >= first && time <= last) {
+  const valid = time.match(regex);
+  if (valid) {
     return next();
   }
   next({
     status: 400,
-    message: "Reservation time must be made between 10:30 AM and 9:30 PM.",
-  });
+    message: "reservation_time must be valid time.",
+  })
 }
 
-function isNotInPast(req, res, next) {
+function hasValidResHours(req, res, next) {
+  const time = req.body.data.reservation_time;
+  const open = "10:30";
+  const close = "21:30";
+  if (time >= open && time <= close) {
+    return next();
+  }
+  next({
+    status: 400,
+    message: "Reservation must be between 10:30AM and 9:30PM.",
+  })
+}
+
+function notInPast(req, res, next) {
   const { reservation_date, reservation_time } = req.body.data;
-  const reservation = new Date(
-    `${reservation_date} ${reservation_time}`
-  ).valueOf();
-  const today = new Date();
-  if (reservation > today) {
+  const now = Date.now();
+  const proposedReservation = new Date(`${reservation_date} ${reservation_time}`).valueOf();
+
+  if (proposedReservation > now) {
     return next();
   }
   next({
     status: 400,
-    message: "Reservation must be made in the future.",
-  });
+    message: "Reservation must be in future.",
+  })
 }
 
-function hasPeople(req, res, next) {
-  const { data: { people } = {} } = req.body;
-  if (people > 0 && typeof people === "number") {
+function hasValidPeople(req, res, next) {
+  const people = req.body.data.people;
+  
+  if (people > 0 && typeof people === 'number') {
     return next();
   }
   next({
     status: 400,
-    message: "Reservation must include valid number of people.",
-  });
+    message: "valid people property required"
+  })
 }
 
 async function create(req, res) {
@@ -167,18 +181,19 @@ async function create(req, res) {
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
-    hasData,
-    hasFirstName,
-    hasLastName,
-    hasMobileNumber,
+    hasData, 
+    hasFirstName, 
+    hasLastName, 
+    hasMobileNumber, 
     hasReservationDate,
     hasValidDate,
     hasValidStatus,
     isNotTuesday,
     hasReservationTime,
     hasValidTime,
-    isNotInPast,
-    hasPeople,
-    asyncErrorBoundary(create),
+    hasValidResHours,
+    notInPast,
+    hasValidPeople, 
+    asyncErrorBoundary(create)
   ],
 };
