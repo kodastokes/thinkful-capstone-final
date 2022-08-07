@@ -83,7 +83,7 @@ function TableCreate() {
         <button
           type="button"
           className="btn btn-secondary mr-3"
-          onClick={goBack()}
+          onClick={goBack}
         >
           Cancel
         </button>

@@ -5,6 +5,8 @@ import NotFound from "./NotFound";
 import { today } from "../utils/date-time";
 import useQuery from "../utils/useQuery";
 import ReservationCreate from "./reservations/ReservationCreate";
+import TableCreate from "./tables/TableCreate";
+import ReservationSeat from "./reservations/ReservationSeat";
 
 function Routes() {
   const [date, setDate] = useState(today());
@@ -35,13 +37,17 @@ function Routes() {
         <ReservationCreate date={date} />
       </Route>
 
-      <Route exact path="/tables">
-        <Dashboard date={date} />
+      <Route exact path="/reservations/:reservation_id/seat">
+        <ReservationSeat />
       </Route>
 {/* 
+      <Route exact path="/tables">
+        <Dashboard date={date} />
+      </Route> */}
+
       <Route exact path="/tables/new">
         <TableCreate />
-      </Route> */}
+      </Route>
 
       <Route path="/dashboard">
         <Dashboard date={date} />
