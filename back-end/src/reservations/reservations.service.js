@@ -38,9 +38,48 @@ function create(newReservation) {
     .then((result) => result[0]);
 }
 
+function read(reservation_id) {
+  return knex("reservations")
+    .select("*")
+    .where({ reservation_id })
+    .then((result) => result[0]);
+}
+
+async function updateReservation(reservation) {
+  const {
+    reservation_id,
+    first_name,
+    last_name,
+    mobile_number,
+    reservation_date,
+    reservation_time,
+    people,
+  } = reservation;
+  return knex("reservations").where({ reservation_id }).update(
+    {
+      first_name: first_name,
+      last_name: last_name,
+      mobile_number: mobile_number,
+      reservation_date: reservation_date,
+      reservation_time: reservation_time,
+      people: people,
+    },
+    [
+      "first_name",
+      "last_name",
+      "mobile_number",
+      "people",
+      "reservation_date",
+      "reservation_time",
+    ]
+  );
+}
+
 module.exports = {
   list,
   listByDate,
   listByPhone,
-  create
+  create,
+  read,
+  updateReservation
 };

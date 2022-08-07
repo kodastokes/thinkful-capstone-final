@@ -178,6 +178,32 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+async function reservationExists(req, res, next) {
+  const { reservationId } = req.params;
+  const reservation = await service.read(reservationId);
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  }
+  next({
+    status: 404,
+    message: `Reservation ${reservationId} not found`,
+  })
+}
+
+function read(req, res) {
+  const data = res.locals.reservation;
+  res.json({ data });
+}
+
+async function updateReservation(req, res) {
+  const reservation = req.body.data;
+  const newRes = await service.updateReservation(reservation);
+  const result = newRes[0];
+  res.status(200).json({ data: result });
+}
+
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -195,5 +221,21 @@ module.exports = {
     notInPast,
     hasValidPeople, 
     asyncErrorBoundary(create)
+  ],
+  read: [asyncErrorBoundary(reservationExists), read],
+  update: [
+    asyncErrorBoundary(reservationExists),
+    hasFirstName,
+    hasLastName, 
+    hasMobileNumber, 
+    hasReservationDate,
+    hasValidDate,
+    hasValidStatus,
+    isNotTuesday,
+    hasReservationTime,
+    hasValidTime,
+    hasValidResHours,
+    hasValidPeople, 
+    asyncErrorBoundary(updateReservation),
   ],
 };

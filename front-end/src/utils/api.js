@@ -90,10 +90,10 @@ export async function createReservation(reservation, signal) {
 export async function createTable(table, signal) {
   const url = `${API_BASE_URL}/tables`;
   const options = {
-    method: 'POST',
+    method: "POST",
     headers,
     body: JSON.stringify({ data: table }),
     signal,
   };
-  return await fetchJson(url, options);
+  return await fetchJson(url, options, {});
 }

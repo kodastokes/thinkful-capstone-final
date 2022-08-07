@@ -55,6 +55,83 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+function hasResID(req, res, next) {
+  const reservation = req.body.data.reservation_id;
+  if (reservation) {
+    return next();
+  }
+  next({
+    status: 400,
+    message: "reservation_id required",
+  });
+}
+
+async function tableExists(req, res, next) {
+  const table_id = req.params.table_id;
+  const table = await service.readTable(table_id);
+  if (table) {
+    res.locals.table = table;
+    return next();
+  }
+  next({
+    status: 404,
+    message: `table_id ${table_id} does not exist`,
+  });
+}
+
+async function reservationExists(req, res, next) {
+  const reservation = await service.readReservation(
+    req.body.data.reservation_id
+  );
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  }
+  next({
+    status: 404,
+    message: `reservation_id ${req.body.data.reservation_id} does not exist`,
+  });
+}
+
+function tableOpen(req, res, next) {
+  const table = res.locals.table;
+  if (!table.reservation_id) {
+    return next();
+  }
+  next({
+    status: 400,
+    message: `table_id is occupied`,
+  });
+}
+
+async function hasEnoughSeats(req, res, next) {
+  const { reservation, table } = res.locals;
+  if (reservation.people > table.capacity) {
+    next({
+      status: 400,
+      message: "table capacity is smaller than reservation size",
+    });
+  }
+  return next();
+}
+
+async function reservationSeated(req, res, next) {
+  const seated = await service.readTableByRes(req.body.data.reservation_id);
+  if (!seated) {
+    return next();
+  }
+  next({
+    status: 400,
+    message: "reservation_id is already seated",
+  });
+}
+
+async function updateSeatRes(req, res) {
+    const { reservation, table } = res.locals;
+    const data = await service.updateSeatRes(reservation.reservation_id, table.table_id);
+    res.json({ data })
+  }
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -63,5 +140,15 @@ module.exports = {
     hasValidTableName,
     hasValidCapacity,
     asyncErrorBoundary(create),
+  ],
+  updateSeat: [
+    hasData,
+    hasResID,
+    asyncErrorBoundary(tableExists),
+    asyncErrorBoundary(reservationExists),
+    tableOpen,
+    asyncErrorBoundary(hasEnoughSeats),
+    asyncErrorBoundary(reservationSeated),
+    asyncErrorBoundary(updateSeatRes),
   ],
 };
