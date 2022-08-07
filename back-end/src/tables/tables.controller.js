@@ -127,10 +127,13 @@ async function reservationSeated(req, res, next) {
 }
 
 async function updateSeatRes(req, res) {
-    const { reservation, table } = res.locals;
-    const data = await service.updateSeatRes(reservation.reservation_id, table.table_id);
-    res.json({ data })
-  }
+  const { reservation, table } = res.locals;
+  const data = await service.updateSeatRes(
+    reservation.reservation_id,
+    table.table_id
+  );
+  res.json({ data });
+}
 
 module.exports = {
   list: asyncErrorBoundary(list),

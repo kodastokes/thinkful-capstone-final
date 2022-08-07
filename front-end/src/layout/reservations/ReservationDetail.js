@@ -13,7 +13,6 @@ function ReservationDetail({
     status,
   },
 }) {
-
   return (
     <>
       {/* <ErrorAlert error={error} /> */}

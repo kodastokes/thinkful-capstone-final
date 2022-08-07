@@ -31,11 +31,13 @@ function ReservationCreate() {
     event.preventDefault();
     const submissionData = {
       ...formData,
-      people: parseInt(formData.people)
-    }
+      people: parseInt(formData.people),
+    };
     createReservation(submissionData)
       .then(() => history.push(`/dashboard?date=${formData.reservation_date}`))
-      .then(console.log("form data from handleSubmit", submissionData, "submitted"))
+      .then(
+        console.log("form data from handleSubmit", submissionData, "submitted")
+      )
       .catch(setReservationsError);
   };
 
@@ -51,8 +53,12 @@ function ReservationCreate() {
           <ErrorAlert error={reservationsError} />
           <ReservationForm formData={formData} handleChange={handleChange} />
           <div>
-            <button onClick={goBack} className="btn btn-secondary mr-2">Cancel</button>
-            <button type="submit" className="btn btn-primary">Submit</button>
+            <button onClick={goBack} className="btn btn-secondary mr-2">
+              Cancel
+            </button>
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
           </div>
         </fieldset>
       </form>

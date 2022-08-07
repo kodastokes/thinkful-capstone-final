@@ -81,5 +81,5 @@ module.exports = {
   listByPhone,
   create,
   read,
-  updateReservation
+  updateReservation,
 };

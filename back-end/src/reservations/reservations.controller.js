@@ -1,6 +1,5 @@
-const service = require('./reservations.service');
-const asyncErrorBoundary = require('../errors/asyncErrorBoundary');
-
+const service = require("./reservations.service");
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 async function list(req, res) {
   const { date, currentDate, mobile_number } = req.query;
@@ -83,18 +82,18 @@ function hasValidDate(req, res, next) {
   next({
     status: 400,
     message: "reservation_date must be valid date.",
-  })
+  });
 }
 
 function hasValidStatus(req, res, next) {
   const status = req.body.data.status;
-  if (status !== 'seated' && status !== 'finished') {
+  if (status !== "seated" && status !== "finished") {
     return next();
   }
   next({
     status: 400,
     message: "status cannot be seated, finished.",
-  })
+  });
 }
 
 function isNotTuesday(req, res, next) {
@@ -106,18 +105,18 @@ function isNotTuesday(req, res, next) {
   next({
     status: 400,
     message: "Restaurant is closed on Tuesdays.",
-  })
+  });
 }
 
 function hasReservationTime(req, res, next) {
   const time = req.body.data.reservation_time;
-  if (time && typeof time === 'string') {
+  if (time && typeof time === "string") {
     return next();
   }
   next({
     status: 400,
     message: "valid reservation_time property required.",
-  })
+  });
 }
 
 function hasValidTime(req, res, next) {
@@ -130,7 +129,7 @@ function hasValidTime(req, res, next) {
   next({
     status: 400,
     message: "reservation_time must be valid time.",
-  })
+  });
 }
 
 function hasValidResHours(req, res, next) {
@@ -143,13 +142,15 @@ function hasValidResHours(req, res, next) {
   next({
     status: 400,
     message: "Reservation must be between 10:30AM and 9:30PM.",
-  })
+  });
 }
 
 function notInPast(req, res, next) {
   const { reservation_date, reservation_time } = req.body.data;
   const now = Date.now();
-  const proposedReservation = new Date(`${reservation_date} ${reservation_time}`).valueOf();
+  const proposedReservation = new Date(
+    `${reservation_date} ${reservation_time}`
+  ).valueOf();
 
   if (proposedReservation > now) {
     return next();
@@ -157,19 +158,19 @@ function notInPast(req, res, next) {
   next({
     status: 400,
     message: "Reservation must be in future.",
-  })
+  });
 }
 
 function hasValidPeople(req, res, next) {
   const people = req.body.data.people;
-  
-  if (people > 0 && typeof people === 'number') {
+
+  if (people > 0 && typeof people === "number") {
     return next();
   }
   next({
     status: 400,
-    message: "valid people property required"
-  })
+    message: "valid people property required",
+  });
 }
 
 async function create(req, res) {
@@ -188,7 +189,7 @@ async function reservationExists(req, res, next) {
   next({
     status: 404,
     message: `Reservation ${reservationId} not found`,
-  })
+  });
 }
 
 function read(req, res) {
@@ -203,14 +204,13 @@ async function updateReservation(req, res) {
   res.status(200).json({ data: result });
 }
 
-
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
-    hasData, 
-    hasFirstName, 
-    hasLastName, 
-    hasMobileNumber, 
+    hasData,
+    hasFirstName,
+    hasLastName,
+    hasMobileNumber,
     hasReservationDate,
     hasValidDate,
     hasValidStatus,
@@ -219,15 +219,15 @@ module.exports = {
     hasValidTime,
     hasValidResHours,
     notInPast,
-    hasValidPeople, 
-    asyncErrorBoundary(create)
+    hasValidPeople,
+    asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), read],
   update: [
     asyncErrorBoundary(reservationExists),
     hasFirstName,
-    hasLastName, 
-    hasMobileNumber, 
+    hasLastName,
+    hasMobileNumber,
     hasReservationDate,
     hasValidDate,
     hasValidStatus,
@@ -235,7 +235,7 @@ module.exports = {
     hasReservationTime,
     hasValidTime,
     hasValidResHours,
-    hasValidPeople, 
+    hasValidPeople,
     asyncErrorBoundary(updateReservation),
   ],
 };
