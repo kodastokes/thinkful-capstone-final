@@ -204,6 +204,36 @@ async function updateReservation(req, res) {
   res.status(200).json({ data: result });
 }
 
+function notFinished(req, res, next) {
+  const reservation = res.locals.reservation;
+  if (reservation.status === "finished") {
+    next({
+      status: 400,
+      message: "reservation cannot be finished.",
+    });
+  } else {
+    return next();
+  }
+}
+
+function validUpdateStatus(req, res, next) {
+  const status = req.body.data.status;
+  if (status !== "unknown") {
+    return next();
+  }
+  next({
+    status: 400,
+    message: "status cannot be unknown.",
+  });
+}
+
+async function updateStatus(req, res) {
+  const status = req.body.data.status;
+  const { reservation_id } = res.locals.reservation;
+  let result = await service.updateStatus(reservation_id, status);
+  res.status(200).json({ data: { status: result[0].status } });
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -237,5 +267,11 @@ module.exports = {
     hasValidResHours,
     hasValidPeople,
     asyncErrorBoundary(updateReservation),
+  ],
+  updateStatus: [
+    asyncErrorBoundary(reservationExists),
+    notFinished,
+    validUpdateStatus,
+    asyncErrorBoundary(updateStatus),
   ],
 };

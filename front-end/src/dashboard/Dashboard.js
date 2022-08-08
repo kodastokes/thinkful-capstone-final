@@ -135,7 +135,7 @@ function Dashboard({ date }) {
             </thead>
             <tbody>
               {tables.map((table) => (
-                <TableDetail table={table} key={table.table_id} />
+                <TableDetail table={table} key={table.table_id} loadDashboard={loadDashboard}/>
               ))}
             </tbody>
           </table>

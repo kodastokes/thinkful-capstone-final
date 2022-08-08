@@ -40,10 +40,10 @@ function Routes() {
       <Route exact path="/reservations/:reservation_id/seat">
         <ReservationSeat />
       </Route>
-      {/* 
+      
       <Route exact path="/tables">
         <Dashboard date={date} />
-      </Route> */}
+      </Route>
 
       <Route exact path="/tables/new">
         <TableCreate />
