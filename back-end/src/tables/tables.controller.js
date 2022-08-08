@@ -148,10 +148,8 @@ function tableNotOccupied(req, res, next) {
 
 async function destroy(req, res) {
   const {table_id, reservation_id} = res.locals.table;
-  console.log(table_id, reservation_id)
   await service.destroyTableRes(table_id, reservation_id);
   const data = await service.list();
-  console.log(data)
   res.json({ data });
 }
 

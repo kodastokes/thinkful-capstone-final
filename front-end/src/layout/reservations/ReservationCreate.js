@@ -35,9 +35,6 @@ function ReservationCreate() {
     };
     createReservation(submissionData)
       .then(() => history.push(`/dashboard?date=${formData.reservation_date}`))
-      .then(
-        console.log("form data from handleSubmit", submissionData, "submitted")
-      )
       .catch(setReservationsError);
   };
 
