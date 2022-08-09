@@ -1,5 +1,7 @@
-import React from "react";
-// import ErrorAlert from "../ErrorAlert";
+import React, { useState } from "react";
+import { useHistory } from "react-router";
+import ErrorAlert from "../ErrorAlert";
+import { updateResStatus, listTables } from "../../utils/api";
 
 function ReservationDetail({
   reservation: {
@@ -12,12 +14,33 @@ function ReservationDetail({
     people,
     status,
   },
+  loadDashboard,
 }) {
-//   const [error, setError] = useState("");
+  const history = useHistory();
+
+  const [error, setError] = useState(null);
+
+  const handleCancelRes = (event) => {
+    event.preventDefault();
+    setError(null);
+    if (
+      window.confirm(
+        "Do you want to cancel this reservation? This cannot be undone."
+      )
+    ) {
+      updateResStatus({ status: "cancelled" }, reservation_id)
+        .then(() => {
+          listTables({});
+          loadDashboard();
+          history.push("/dashboard");
+        })
+        .catch(setError);
+    }
+  };
 
   return (
     <>
-      {/* <ErrorAlert error={error} /> */}
+      <ErrorAlert error={error} />
       <tr>
         <th scope="row"> {reservation_id} </th>
         <td> {first_name} </td>
@@ -34,6 +57,25 @@ function ReservationDetail({
             </a>
           ) : (
             <div></div>
+          )}
+        </td>
+        <td>
+          {status === "booked" ? (
+            <a href={`/reservations/${reservation_id}/edit`}>
+              <button className="btn btn-primary "> Edit </button>
+            </a>
+          ) : (
+            <></>
+          )}
+        </td>
+        <td data-reservation-id-cancel={reservation_id}>
+          {status === "booked" ? (
+            <button className="btn btn-danger ml-2" onClick={handleCancelRes}>
+              {" "}
+              Cancel{" "}
+            </button>
+          ) : (
+            <></>
           )}
         </td>
       </tr>

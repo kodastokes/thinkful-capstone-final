@@ -111,6 +111,7 @@ function Dashboard({ date }) {
                 <ReservationDetail
                   reservation={reservation}
                   key={reservation.reservation_id}
+                  loadDashboard={loadDashboard}
                 />
               ))}
             </tbody>

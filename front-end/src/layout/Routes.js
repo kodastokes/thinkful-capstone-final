@@ -8,6 +8,7 @@ import ReservationCreate from "./reservations/ReservationCreate";
 import TableCreate from "./tables/TableCreate";
 import ReservationSeat from "./reservations/ReservationSeat";
 import ReservationSearch from "./reservations/ReservationSearch";
+import ReservationEdit from "./reservations/ReservationEdit";
 
 function Routes() {
   const [date, setDate] = useState(today());
@@ -40,6 +41,10 @@ function Routes() {
 
       <Route exact path="/reservations/new">
         <ReservationCreate date={date} />
+      </Route>
+
+      <Route exact path="/reservations/:reservation_id/edit">
+        <ReservationEdit date={date} />
       </Route>
 
       <Route exact path="/reservations/:reservation_id/seat">
