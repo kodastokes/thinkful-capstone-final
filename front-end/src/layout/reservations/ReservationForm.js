@@ -25,8 +25,8 @@ function ReservationForm({
             type="text"
             onChange={handleChange}
             required={true}
-            placeholder={first_name}
-            value={first_name}
+            placeholder={first_name || ""}
+            value={first_name || ""}
           />
           <small className="form-text text-muted"> Enter First Name </small>
         </div>
@@ -41,8 +41,8 @@ function ReservationForm({
             type="text"
             onChange={handleChange}
             required={true}
-            placeholder={last_name}
-            value={last_name}
+            placeholder={last_name || ""}
+            value={last_name || ""}
           />
           <small className="form-text text-muted"> Enter Last Name </small>
         </div>
@@ -59,8 +59,8 @@ function ReservationForm({
             type="text"
             onChange={handleChange}
             required={true}
-            placeholder={mobile_number}
-            value={mobile_number}
+            placeholder={mobile_number || ""}
+            value={mobile_number || ""}
           />
           <small className="form-text text-muted"> Enter Mobile Number </small>
         </div>
@@ -75,8 +75,8 @@ function ReservationForm({
             type="number"
             onChange={handleChange}
             required={true}
-            placeholder={people}
-            value={people}
+            placeholder={people || ""}
+            value={people || ""}
           />
           <small className="form-text text-muted"> Enter Party Size </small>
         </div>
@@ -91,8 +91,8 @@ function ReservationForm({
             type="date"
             onChange={handleChange}
             required={true}
-            placeholder={reservation_date}
-            value={reservation_date}
+            placeholder={reservation_date || ""}
+            value={reservation_date || ""}
           />
           <small className="form-text text-muted">
             Enter Reservation Date (Closed on Tuesdays)
@@ -107,8 +107,8 @@ function ReservationForm({
             type="time"
             onChange={handleChange}
             required={true}
-            placeholder={reservation_time}
-            value={reservation_time}
+            placeholder={reservation_time || ""}
+            value={reservation_time || ""}
           />
           <small className="form-text text-muted">Enter Reservation Time</small>
         </div>
