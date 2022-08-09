@@ -7,6 +7,7 @@ import useQuery from "../utils/useQuery";
 import ReservationCreate from "./reservations/ReservationCreate";
 import TableCreate from "./tables/TableCreate";
 import ReservationSeat from "./reservations/ReservationSeat";
+import ReservationSearch from "./reservations/ReservationSearch";
 
 function Routes() {
   const [date, setDate] = useState(today());
@@ -27,6 +28,10 @@ function Routes() {
     <Switch>
       <Route exact={true} path="/">
         <Redirect to={"/dashboard"} />
+      </Route>
+
+      <Route exact path="/search">
+        <ReservationSearch />
       </Route>
 
       <Route exact path="/reservations">

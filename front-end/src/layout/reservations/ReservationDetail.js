@@ -13,6 +13,8 @@ function ReservationDetail({
     status,
   },
 }) {
+//   const [error, setError] = useState("");
+
   return (
     <>
       {/* <ErrorAlert error={error} /> */}
