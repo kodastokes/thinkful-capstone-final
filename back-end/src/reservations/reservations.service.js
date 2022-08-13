@@ -76,10 +76,10 @@ async function updateReservation(reservation) {
 }
 
 async function updateStatus(reservation_id, status) {
-    return knex('reservations')
-      .where({ reservation_id })
-      .update({status: status }, '*')
-  }
+  return knex("reservations")
+    .where({ reservation_id })
+    .update({ status: status }, "*");
+}
 
 module.exports = {
   list,
@@ -88,5 +88,5 @@ module.exports = {
   create,
   read,
   updateReservation,
-  updateStatus
+  updateStatus,
 };

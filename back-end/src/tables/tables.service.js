@@ -52,21 +52,24 @@ async function updateSeatRes(reservation_id, table_id) {
 }
 
 async function destroyTableRes(table_id, reservation_id) {
-    const trx = await knex.transaction();
-    return trx("tables")
-      .where({ table_id })
-      .update({
+  const trx = await knex.transaction();
+  return trx("tables")
+    .where({ table_id })
+    .update(
+      {
         reservation_id: null,
         status: "free",
-      }, "*")
-      .then(() => 
-        trx("reservations")
+      },
+      "*"
+    )
+    .then(() =>
+      trx("reservations")
         .where({ reservation_id })
         .update({ status: "finished" }, "*")
-      )
-      .then(trx.commit)
-      .catch(trx.rollback)
-  }
+    )
+    .then(trx.commit)
+    .catch(trx.rollback);
+}
 
 module.exports = {
   list,
@@ -75,5 +78,5 @@ module.exports = {
   readReservation,
   readTableByRes,
   updateSeatRes,
-  destroyTableRes
+  destroyTableRes,
 };
