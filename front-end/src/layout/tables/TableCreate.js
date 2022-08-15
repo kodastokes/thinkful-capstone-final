@@ -23,16 +23,16 @@ function TableCreate() {
   };
 
   const handleSubmit = (event) => {
+    const abortController = new AbortController();
     event.preventDefault();
-
     const submissionData = {
       ...formData,
       capacity: parseInt(formData.capacity),
     };
-
     createTable(submissionData)
       .then(() => history.push(`/dashboard`))
       .catch(setError);
+    return () => abortController.abort();
   };
 
   const goBack = () => {

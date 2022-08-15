@@ -15,6 +15,7 @@ function ReservationSearch() {
   const [error, setError] = useState("No reservations found");
 
   const handleSubmit = (event) => {
+    const abortController = new AbortController();
     event.preventDefault();
     setError(null);
     listReservations({ mobile_number })
@@ -23,6 +24,7 @@ function ReservationSearch() {
         history.push("/search");
       })
       .catch(setError("No reservations found"));
+    return () => abortController.abort();
   };
 
   return (

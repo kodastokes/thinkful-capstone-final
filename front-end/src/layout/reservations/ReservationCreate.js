@@ -28,6 +28,7 @@ function ReservationCreate() {
   };
 
   const handleSubmit = (event) => {
+    const abortController = new AbortController();
     event.preventDefault();
     const submissionData = {
       ...formData,
@@ -36,6 +37,7 @@ function ReservationCreate() {
     createReservation(submissionData)
       .then(() => history.push(`/dashboard?date=${formData.reservation_date}`))
       .catch(setReservationsError);
+    return () => abortController.abort();
   };
 
   const goBack = () => {

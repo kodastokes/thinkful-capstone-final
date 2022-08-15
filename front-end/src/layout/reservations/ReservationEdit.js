@@ -14,6 +14,7 @@ function ReservationEdit({ date }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const abortController = new AbortController();
     getReservation(reservation_id)
       .then((response) => {
         setCurrentReservation({
@@ -22,6 +23,7 @@ function ReservationEdit({ date }) {
         });
       })
       .catch(setError);
+    return () => abortController.abort();
   }, [reservation_id]);
 
   const handleChange = ({ target }) => {
@@ -32,6 +34,7 @@ function ReservationEdit({ date }) {
   };
 
   const handleSubmit = (event) => {
+    const abortController = new AbortController();
     event.preventDefault();
     updateReservation({
       ...currentReservation,
@@ -43,6 +46,7 @@ function ReservationEdit({ date }) {
       })
 
       .catch(setError);
+    return () => abortController.abort();
   };
 
   return (
